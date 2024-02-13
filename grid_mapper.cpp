@@ -91,10 +91,9 @@ public:
 
 
   void rayTrace(int x1, int y1, int x2, int y2) {
-
     int dx = abs(x2 - x1);
     int dy = abs(y2 - y1);
-    
+  
     int sx = x1 < x2 ? 1 : -1; 
     int sy = y1 < y2 ? 1 : -1;
     
@@ -102,7 +101,7 @@ public:
     int e2;
     
     while(true) {
-      // Update free/unknown cells
+      // Update unknown cells
       if(x1 >= 0 && y1 >= 0 && x1 < canvas.rows && 
         y1 < canvas.cols) {  
         if(canvas.at<char>(x1, y1) == CELL_UNKNOWN) {
@@ -113,7 +112,7 @@ public:
       // Check if endpoint reached
       if (x1 == x2 && y1 == y2) break;
       
-      // Update error term
+      // Update error term  
       e2 = 2 * err;
       if (e2 > -dy) {  
         err = err - dy; 
@@ -134,14 +133,13 @@ public:
     int robot_x = x + canvas.rows/2; 
     int robot_y = y + canvas.cols/2;
     
-    // Mark robot cell
+    // Mark robots cell
     plot(robot_x, robot_y, CELL_ROBOT);
-
-    // Parse laser scan data
     int num_rays = msg->ranges.size();
     double scan_fov = msg->angle_max - msg->angle_min;
     double ray_angle_inc = scan_fov / (num_rays-1);
     
+    //loop through number of rays
     for(int i = 0; i < num_rays; i++) {
 
       double ray_angle = msg->angle_min + i * ray_angle_inc;
@@ -184,6 +182,7 @@ public:
     
     while (ros::ok()) { // Keep spinning loop until user presses Ctrl+C
       // TODO: remove following demo code and make robot move around the environment
+      
       // plot(x, y, rand() % 255); // Demo code: plot robot's current position on canvas
       // plotImg(0, 0, CELL_OCCUPIED); // Demo code: plot different colors at 4 canvas corners
       // plotImg(0, canvas.rows-1, CELL_UNKNOWN);
